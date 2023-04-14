@@ -203,9 +203,14 @@ func (s *SubDomain) randomDNS() string {
 }
 
 func (s *SubDomain) PavoSubdomain(domain string) ([]string, error) {
+	if !pavo.IsFofa() {
+		err := fmt.Errorf("missing fofa email and key, please edit file `%s`", s.PavoConfigName())
+		gologger.Info().Msg(err.Error())
+		return nil, err
+	}
+
 	r, err := pavo.QuerySubDomain(domain, 1000)
 	if err != nil {
-		err := fmt.Errorf("%s, please edit file `%s`", err.Error(), s.PavoConfigName())
 		gologger.Info().Msg(err.Error())
 		return nil, err
 	}

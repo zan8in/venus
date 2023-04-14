@@ -8,7 +8,7 @@ require (
 	github.com/remeh/sizedwaitgroup v1.0.0
 	github.com/zan8in/goflags v0.0.0-20230204144650-0745934af58a
 	github.com/zan8in/gologger v0.0.0-20220917062627-c34a83c0a373
-	github.com/zan8in/pavo v0.0.0-20230331080424-c7ecd9548747
+	github.com/zan8in/pavo v0.0.0-20230414054405-687df54c347c
 	github.com/zan8in/pins v0.0.0-20230414050622-4335f4dff45f
 )
 

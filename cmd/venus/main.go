@@ -12,6 +12,8 @@ import (
 
 func main() {
 
+	venus.ShowBanner()
+
 	options := venus.ParseOptions()
 
 	runner, err := venus.NewRunner(options)
