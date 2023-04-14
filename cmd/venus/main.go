@@ -34,7 +34,7 @@ func main() {
 			}
 			fmt.Println(key, value)
 
-			sf.Write(options.Output+".txt", value+"\r\n")
+			sf.Write(options.Output, value+"\r\n")
 		}
 	}
 

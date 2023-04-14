@@ -19,6 +19,8 @@ type (
 
 		Output string
 
+		Dict string
+
 		OnResult OnResultCallback
 	}
 )
@@ -31,6 +33,7 @@ func ParseOptions() *Options {
 
 	flagSet.CreateGroup("input", "Input",
 		flagSet.StringSliceVarP(&options.Target, "t", "target", nil, "target to scan subdomains for (comma-separated)", goflags.NormalizedStringSliceOptions),
+		flagSet.StringVarP(&options.Dict, "dict", "d", "", "list of personal dicts to scan subdmain (file)"),
 	)
 
 	flagSet.CreateGroup("rate-limit", "Rate-limit",

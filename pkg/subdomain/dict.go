@@ -22,22 +22,34 @@ func (s *SubDomain) PreprocessDict() (err error) {
 	}
 	defer subnameTemp.Close()
 
-	fs.WalkDir(f, ".", func(path string, d fs.DirEntry, err error) error {
+	if len(s.Dict) > 0 {
+		f, err := os.Open(s.Dict)
 		if err != nil {
 			return err
 		}
-		if !d.IsDir() && strings.HasSuffix(path, ".txt") {
-			f, err := f.Open(path)
+		defer f.Close()
+
+		if _, err := io.Copy(subnameTemp, f); err != nil {
+			return err
+		}
+	} else {
+		fs.WalkDir(f, ".", func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}
-			defer f.Close()
-			if _, err := io.Copy(subnameTemp, f); err != nil {
-				return err
+			if !d.IsDir() && strings.HasSuffix(path, ".txt") {
+				f, err := f.Open(path)
+				if err != nil {
+					return err
+				}
+				defer f.Close()
+				if _, err := io.Copy(subnameTemp, f); err != nil {
+					return err
+				}
 			}
-		}
-		return err
-	})
+			return err
+		})
+	}
 
 	s.dictTempName = subnameTemp.Name()
 

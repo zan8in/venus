@@ -29,6 +29,7 @@ func NewRunner(options *Options) (*Runner, error) {
 	}
 
 	s, err := subdomain.NewSuDomain(
+		runner.options.Dict,
 		runner.options.Timeout,
 		runner.options.RateLimit,
 	)

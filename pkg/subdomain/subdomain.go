@@ -32,6 +32,8 @@ type SubDomain struct {
 	DictChan     chan string
 
 	rateLimit int
+
+	Dict string
 }
 
 func newCustomDialer(dns string) func(ctx context.Context, network, address string) (net.Conn, error) {
@@ -44,7 +46,7 @@ func newCustomDialer(dns string) func(ctx context.Context, network, address stri
 	}
 }
 
-func NewSuDomain(timeout, ratelimit int) (*SubDomain, error) {
+func NewSuDomain(dict string, timeout, ratelimit int) (*SubDomain, error) {
 
 	subdomain := &SubDomain{
 		ctx:              context.Background(),
@@ -56,6 +58,7 @@ func NewSuDomain(timeout, ratelimit int) (*SubDomain, error) {
 		ResultSubdomains: sliceutil.SafeSlice{},
 		DictChan:         make(chan string),
 		rateLimit:        ratelimit,
+		Dict:             dict,
 	}
 
 	if err := subdomain.currentDNSServers(); err != nil {
