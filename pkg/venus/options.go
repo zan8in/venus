@@ -17,6 +17,8 @@ type (
 		RateLimit int // RateLimit is the rate of port
 		Timeout   int //
 
+		Output string
+
 		OnResult OnResultCallback
 	}
 )
@@ -37,6 +39,7 @@ func ParseOptions() *Options {
 
 	flagSet.CreateGroup("optimization", "Optimization",
 		flagSet.IntVar(&options.Timeout, "timeout", DefaultTimeout, "millisecond to wait before timing out"),
+		flagSet.StringVarP(&options.Output, "output", "o", "", "file to write output to (optional), support format: txt"),
 	)
 
 	_ = flagSet.Parse()

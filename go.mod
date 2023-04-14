@@ -9,7 +9,7 @@ require (
 	github.com/zan8in/goflags v0.0.0-20230204144650-0745934af58a
 	github.com/zan8in/gologger v0.0.0-20220917062627-c34a83c0a373
 	github.com/zan8in/pavo v0.0.0-20230331080424-c7ecd9548747
-	github.com/zan8in/pins v0.0.0-20230403022702-3d3e641e57ef
+	github.com/zan8in/pins v0.0.0-20230414050622-4335f4dff45f
 )
 
 require (

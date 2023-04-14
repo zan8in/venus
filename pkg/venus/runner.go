@@ -45,6 +45,7 @@ func NewRunner(options *Options) (*Runner, error) {
 }
 
 func (runner *Runner) Run() error {
+	defer runner.sendDone()
 
 	go runner.subdomain.DictList()
 
@@ -63,6 +64,12 @@ func (r *Runner) send(domain, sub string) {
 		rst[domain] = sub
 		r.options.OnResult(rst)
 	}
+}
+
+func (r *Runner) sendDone() {
+	rst := map[string]string{}
+	rst["DONE"] = "DONE"
+	r.options.OnResult(rst)
 }
 
 func (r *Runner) Blaster(domains []string) error {
