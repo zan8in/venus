@@ -12,7 +12,8 @@ type OnResultCallback func(map[string]string)
 
 type (
 	Options struct {
-		Target goflags.StringSlice
+		Target     goflags.StringSlice
+		TargetFile string // HostsFile is the file containing list of hosts to find port for
 
 		RateLimit int // RateLimit is the rate of port
 		Timeout   int //
@@ -33,6 +34,7 @@ func ParseOptions() *Options {
 
 	flagSet.CreateGroup("input", "Input",
 		flagSet.StringSliceVarP(&options.Target, "t", "target", nil, "target to scan subdomains for (comma-separated)", goflags.NormalizedStringSliceOptions),
+		flagSet.StringVarP(&options.TargetFile, "T", "target-file", "", "list of hosts to scan ports (file)"),
 		flagSet.StringVarP(&options.Dict, "dict", "d", "", "list of personal dicts to scan subdmain (file)"),
 	)
 
@@ -62,7 +64,7 @@ var (
 
 func (options *Options) validateOptions() (err error) {
 
-	if options.Target == nil {
+	if options.Target == nil && options.TargetFile == "" {
 		return errNoInputList
 	}
 

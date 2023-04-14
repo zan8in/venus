@@ -44,8 +44,6 @@ github.com/zan8in/goflags v0.0.0-20230204144650-0745934af58a h1:kgpEfiv4FDkAthNB
 github.com/zan8in/goflags v0.0.0-20230204144650-0745934af58a/go.mod h1:SU2BjeuADHecx3khPTkSgkYMvd89YFJnu8YhFDGRIdM=
 github.com/zan8in/gologger v0.0.0-20220917062627-c34a83c0a373 h1:T2YD/hp647jDauupyJqrwMdFSKkLbVeOylYA1ViNrg0=
 github.com/zan8in/gologger v0.0.0-20220917062627-c34a83c0a373/go.mod h1:z3Zn3+DLpcfFKNqhAdYECiFeFK+o1EW3Gh0DEhFZ+v4=
-github.com/zan8in/pavo v0.0.0-20230331080424-c7ecd9548747 h1:UkVll2AeLxy4VT6ZLmqrWiVvk/uqD/iF9oxCF3aGKgs=
-github.com/zan8in/pavo v0.0.0-20230331080424-c7ecd9548747/go.mod h1:K89VLh+uvrGNaHyGJ5qV8M3kG4UML0unkeC0xnd7Hgc=
 github.com/zan8in/pavo v0.0.0-20230414054405-687df54c347c h1:dNZbk0m6guFOvde+lxApNaDtH0ARpp53X23dHZ6M23g=
 github.com/zan8in/pavo v0.0.0-20230414054405-687df54c347c/go.mod h1:K89VLh+uvrGNaHyGJ5qV8M3kG4UML0unkeC0xnd7Hgc=
 github.com/zan8in/pins v0.0.0-20230414050622-4335f4dff45f h1:5i7QfMbdYTKsvNDfHYMAF3Ctmum7nNI8+YC86fOojDc=

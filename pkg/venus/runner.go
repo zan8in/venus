@@ -37,6 +37,10 @@ func NewRunner(options *Options) (*Runner, error) {
 		return runner, err
 	}
 
+	if err := runner.PreprocessTarget(); err != nil {
+		return runner, err
+	}
+
 	runner.subdomain = s
 
 	runner.wgscan = sizedwaitgroup.New(runner.rateLimit)
@@ -75,6 +79,15 @@ func (r *Runner) sendDone() {
 
 func (r *Runner) Blaster(domains []string) error {
 	for _, domain := range domains {
+		if subs, err := r.subdomain.PavoSubdomain(domain); err == nil {
+			for _, sub := range subs {
+				r.send(domain, sub)
+			}
+		}
+		time.Sleep(3 * time.Second)
+	}
+
+	for _, domain := range domains {
 		if len(urlutil.TopDomain(domain)) == 0 {
 			r.subdomain.BlacklistedIps.Add(domain)
 			gologger.Info().Msgf("%s is not a valid domain", domain)
@@ -84,11 +97,6 @@ func (r *Runner) Blaster(domains []string) error {
 			gologger.Info().Msg(err.Error())
 		}
 
-		if subs, err := r.subdomain.PavoSubdomain(domain); err == nil {
-			for _, sub := range subs {
-				r.send(domain, sub)
-			}
-		}
 	}
 
 	if r.subdomain.DictChan == nil {

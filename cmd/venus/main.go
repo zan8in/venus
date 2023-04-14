@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/zan8in/gologger"
@@ -34,7 +33,7 @@ func main() {
 				wg.Done()
 				return
 			}
-			fmt.Println(key, value)
+			gologger.Print().Msg(value)
 
 			sf.Write(options.Output, value+"\r\n")
 		}
