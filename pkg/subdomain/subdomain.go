@@ -14,13 +14,14 @@ import (
 )
 
 type SubDomain struct {
-	ctx            context.Context
-	timeout        time.Duration
-	resolver       *net.Resolver
-	WildcardIps    setutil.Set[netip.Addr]
-	BlacklistedIps setutil.Set[string]
-	isWildcard     bool
-	dnsList        []string
+	ctx              context.Context
+	timeout          time.Duration
+	resolver         *net.Resolver
+	WildcardIps      setutil.Set[netip.Addr]
+	BlacklistedIps   setutil.Set[string]
+	ResultSubdomains setutil.Set[string]
+	isWildcard       bool
+	dnsList          []string
 
 	dictTempName string
 	DictChan     chan string

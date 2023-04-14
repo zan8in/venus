@@ -6,7 +6,6 @@ import (
 
 	"github.com/remeh/sizedwaitgroup"
 	"github.com/zan8in/gologger"
-	"github.com/zan8in/venus/pkg/result"
 	"github.com/zan8in/venus/pkg/subdomain"
 	"github.com/zan8in/venus/pkg/util/urlutil"
 )
@@ -20,15 +19,12 @@ type (
 		ticker    *time.Ticker
 		wgscan    sizedwaitgroup.SizedWaitGroup
 		rateLimit int
-
-		result *result.Result
 	}
 )
 
 func NewRunner(options *Options) (*Runner, error) {
 	runner := &Runner{
 		options:   options,
-		result:    result.NewResult(),
 		rateLimit: options.RateLimit,
 	}
 
@@ -49,6 +45,7 @@ func NewRunner(options *Options) (*Runner, error) {
 }
 
 func (runner *Runner) Run() error {
+
 	go runner.subdomain.DictList()
 
 	if err := runner.Blaster(runner.options.Target); err != nil {
@@ -87,7 +84,9 @@ func (r *Runner) Blaster(domains []string) error {
 				sub := fmt.Sprintf("%s.%s", name, domain)
 				if ips, err := r.subdomain.DnsLookupRandomResolver(sub); err == nil {
 					if !r.subdomain.WildcardIps.ContainsAny(ips) {
-						gologger.Info().Msg(sub)
+						rst := map[string]string{}
+						rst[domain] = sub
+						r.options.OnResult(rst)
 					}
 				}
 

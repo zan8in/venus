@@ -6,10 +6,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/zan8in/goflags"
 	"github.com/zan8in/gologger"
-	"github.com/zan8in/venus/pkg/result"
 )
 
-type OnResultCallback func(result.Result)
+type OnResultCallback func(map[string]string)
 
 type (
 	Options struct {
@@ -72,6 +71,8 @@ func (options *Options) validateOptions() (err error) {
 	} else {
 		options.Timeout = DefaultTimeout
 	}
+
+	options.OnResult = func(map[string]string) {}
 
 	return err
 }
