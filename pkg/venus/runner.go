@@ -55,6 +55,16 @@ func (runner *Runner) Run() error {
 	return nil
 }
 
+func (r *Runner) send(domain, sub string) {
+	ds := fmt.Sprintf("%s:%s", domain, sub)
+	if r.subdomain.ResultSubdomains.Key(ds) == -1 || r.subdomain.ResultSubdomains.Len() == 0 {
+		r.subdomain.ResultSubdomains.Append(ds)
+		rst := map[string]string{}
+		rst[domain] = sub
+		r.options.OnResult(rst)
+	}
+}
+
 func (r *Runner) Blaster(domains []string) error {
 	for _, domain := range domains {
 		if len(urlutil.TopDomain(domain)) == 0 {
@@ -64,6 +74,12 @@ func (r *Runner) Blaster(domains []string) error {
 
 		if err := r.subdomain.DetectWildcardParse(domain); err != nil {
 			gologger.Info().Msg(err.Error())
+		}
+
+		if subs, err := r.subdomain.PavoSubdomain(domain); err == nil {
+			for _, sub := range subs {
+				r.send(domain, sub)
+			}
 		}
 	}
 
@@ -76,6 +92,7 @@ func (r *Runner) Blaster(domains []string) error {
 			if r.subdomain.BlacklistedIps.Contains(domain) {
 				continue
 			}
+
 			r.wgscan.Add()
 			go func(name, domain string) {
 				defer r.wgscan.Done()
@@ -84,9 +101,7 @@ func (r *Runner) Blaster(domains []string) error {
 				sub := fmt.Sprintf("%s.%s", name, domain)
 				if ips, err := r.subdomain.DnsLookupRandomResolver(sub); err == nil {
 					if !r.subdomain.WildcardIps.ContainsAny(ips) {
-						rst := map[string]string{}
-						rst[domain] = sub
-						r.options.OnResult(rst)
+						r.send(domain, sub)
 					}
 				}
 

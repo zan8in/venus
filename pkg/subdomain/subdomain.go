@@ -6,10 +6,15 @@ import (
 	"math/rand"
 	"net"
 	"net/netip"
+	"os"
+	"path/filepath"
 	"sync"
 	"sync/atomic"
 	"time"
 
+	"github.com/zan8in/gologger"
+	"github.com/zan8in/pavo"
+	sliceutil "github.com/zan8in/pins/slice"
 	"github.com/zan8in/venus/pkg/util/setutil"
 )
 
@@ -19,7 +24,7 @@ type SubDomain struct {
 	resolver         *net.Resolver
 	WildcardIps      setutil.Set[netip.Addr]
 	BlacklistedIps   setutil.Set[string]
-	ResultSubdomains setutil.Set[string]
+	ResultSubdomains sliceutil.SafeSlice
 	isWildcard       bool
 	dnsList          []string
 
@@ -42,14 +47,15 @@ func newCustomDialer(dns string) func(ctx context.Context, network, address stri
 func NewSuDomain(timeout, ratelimit int) (*SubDomain, error) {
 
 	subdomain := &SubDomain{
-		ctx:            context.Background(),
-		timeout:        time.Duration(timeout) * time.Second,
-		resolver:       &net.Resolver{},
-		isWildcard:     false,
-		WildcardIps:    setutil.NewSet[netip.Addr](),
-		BlacklistedIps: setutil.Set[string]{},
-		DictChan:       make(chan string),
-		rateLimit:      ratelimit,
+		ctx:              context.Background(),
+		timeout:          time.Duration(timeout) * time.Second,
+		resolver:         &net.Resolver{},
+		isWildcard:       false,
+		WildcardIps:      setutil.NewSet[netip.Addr](),
+		BlacklistedIps:   setutil.Set[string]{},
+		ResultSubdomains: sliceutil.SafeSlice{},
+		DictChan:         make(chan string),
+		rateLimit:        ratelimit,
 	}
 
 	if err := subdomain.currentDNSServers(); err != nil {
@@ -191,4 +197,25 @@ func (s *SubDomain) randomDNS() string {
 		return DefaultResolvers[7]
 	}
 	return s.dnsList[rand.New(rand.NewSource(time.Now().Unix())).Intn(len(s.dnsList))]
+}
+
+func (s *SubDomain) PavoSubdomain(domain string) ([]string, error) {
+	r, err := pavo.QuerySubDomain(domain, 1000)
+	if err != nil {
+		err := fmt.Errorf("%s, please edit file `%s`", err.Error(), s.PavoConfigName())
+		gologger.Info().Msg(err.Error())
+		return nil, err
+	}
+	return r, nil
+}
+
+func (s *SubDomain) PavoConfigName() string {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+
+	configDir := filepath.Join(homeDir, ".config", "pavo")
+
+	return filepath.Join(configDir, "pavo.yml")
 }
